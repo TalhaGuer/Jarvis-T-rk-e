@@ -107,7 +107,7 @@
         </div>
         
         <div class="input-group">
-            <input type="text" id="komutInput" placeholder="Komut yazın (örn: spotify aç)..." onkeydown="if(event.key==='Enter') komutGonder();">
+            <input type="text" id="komutInput" placeholder="Komut yazın..." onkeydown="if(event.key==='Enter') komutGonder();">
             <button onclick="komutGonder()">Gönder</button>
         </div>
     </div>
@@ -131,7 +131,6 @@
             const input = document.getElementById("komutInput");
             const val = input.value.trim();
             if (val) {
-                // Python tarafındaki komut işleme fonksiyonunu tetikler
                 window.pywebview.api.yazili_komut_isle(val);
                 input.value = "";
             }
