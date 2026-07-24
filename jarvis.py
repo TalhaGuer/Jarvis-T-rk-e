@@ -15,7 +15,6 @@ import pyautogui
 import urllib.parse
 import webview
 
-# Türkçe karakter ve konsol kodlama bozulmalarını engelle
 try:
     sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
     sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
@@ -77,7 +76,6 @@ def youtube_ac_ve_cal(aranan_video=""):
     except Exception as e:
         log_gonder(f"YouTube hatası: {e}")
 
-# Yerel Yapay Zeka (Ollama - Phi3 ile hızlı ve güvenli)
 def yapay_zekaya_sor(soru):
     log_gonder(f"Düşünüyor: {soru}")
     try:
@@ -85,7 +83,7 @@ def yapay_zekaya_sor(soru):
             "model": "phi3",
             "prompt": soru,
             "stream": False
-        }, timeout=90) # Zaman aşımı süresi uzatıldı
+        }, timeout=90)
         
         if response.status_code == 200:
             cevap = response.json().get("response", "").strip()
@@ -93,52 +91,45 @@ def yapay_zekaya_sor(soru):
         else:
             log_gonder("Yapay zeka yanıt veremedi.")
     except requests.exceptions.ConnectionError:
-        log_gonder("Hata: Ollama arka planda çalışmıyor! ('ollama serve' yazın)")
+        log_gonder("Hata: Ollama arka planda çalışmıyor!")
     except requests.exceptions.Timeout:
-        log_gonder("Hata: Yapay zeka çok uzun sürdü (Zaman aşımı).")
+        log_gonder("Hata: Zaman aşımı.")
     except Exception as e:
         log_gonder(f"AI Hatası: {e}")
 
-# Ortak Komut ve Soru İşleme Mantığı
 def komutlari_isle(text):
     text = yerel_metin_temizle(text)
     log_gonder(f"İşlenen: {text}")
     
-    # 1. Ses Yükselt Komutları
     if any(w in text for w in ["sesi aç", "sesi yükselt", "ses yükselt", "sesi arttır"]):
         log_gonder("Komut: Ses yükseltiliyor")
         for _ in range(5): 
             pyautogui.press('volumeup')
             time.sleep(0.05)
 
-    # 2. Ses Kıs Komutları
     elif any(w in text for w in ["sesi kıs", "sesi azalt", "ses düşür"]):
         log_gonder("Komut: Ses kısılıyor")
         for _ in range(5): 
             pyautogui.press('volumedown')
             time.sleep(0.05)
 
-    # 3. Net Durdur Komutu
     elif any(w in text for w in ["durdur", "beklet", "sus", "duraklat", "stop"]):
         if "devam" not in text:
             log_gonder("Komut: Müzik durduruldu")
             pyautogui.press('playpause')
             time.sleep(0.5)
 
-    # 4. Net Başlat / Devam Et Komutu
     elif any(w in text for w in ["devam et", "oynat", "başlat", "çalsın"]):
         if not any(w in text for w in ["spotify", "şarkı", "müzik", "youtube", "video"]):
             log_gonder("Komut: Müzik devam ettiriliyor")
             pyautogui.press('playpause')
             time.sleep(0.5)
 
-    # 5. Şarkıyı Geç Komutu
     elif any(w in text for w in ["geç", "sonraki", "atla"]):
         log_gonder("Komut: Sonraki şarkıya geçildi")
         pyautogui.press('nexttrack')
         time.sleep(0.5)
 
-    # 6. YouTube Komutları
     elif any(w in text for w in ["youtube", "video", "izle"]):
         if not any(w in text for w in ["spotify", "şarkı"]):
             log_gonder("Komut: YouTube işleniyor...")
@@ -153,7 +144,6 @@ def komutlari_isle(text):
             t_yt = threading.Thread(target=youtube_ac_ve_cal, args=(aranan_video,))
             t_yt.start()
 
-    # 7. Spotify Komutları
     elif any(w in text for w in ["spotify", "müzik", "çal", "aç"]):
         if not any(w in text for w in ["not defteri", "tarayıcı", "hesap", "ses", "youtube", "video"]):
             log_gonder("Komut: Spotify açılıyor...")
@@ -179,7 +169,6 @@ def komutlari_isle(text):
             else:
                 pyautogui.press('space')
 
-    # 8. Diğer Araçlar
     elif "saat" in text:
         zaman = datetime.now().strftime("%H:%M")
         log_gonder(f"Saat: {zaman}")
@@ -189,7 +178,6 @@ def komutlari_isle(text):
         log_gonder("Hesap Makinesi açılıyor")
         os.system("calc")
 
-    # 9. Hiçbiri Değilse Yapay Zekaya Soru Olarak Gönder
     else:
         threading.Thread(target=yapay_zekaya_sor, args=(text,), daemon=True).start()
 
