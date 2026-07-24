@@ -1,0 +1,13 @@
+{
+  "name": "jarvis",
+  "version": "1.0.0",
+  "description": "Jarvis Çevrimdışı Sesli Asistan",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^28.3.0",
+    "node-record-lpcm16": "^1.0.1"
+  }
+}

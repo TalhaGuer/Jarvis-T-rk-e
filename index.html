@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jarvis Asistan</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: #f8fafc;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 25px;
+            border-radius: 20px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pulse-ring {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            background: #38bdf8;
+            box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+        h2 { margin: 0 0 5px 0; font-size: 22px; color: #38bdf8; }
+        .status {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+        .log-box {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            height: 110px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+        .log-item {
+            margin-bottom: 5px;
+            border-left: 3px solid #38bdf8;
+            padding-left: 6px;
+            word-break: break-all;
+        }
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.9);
+            color: #fff;
+            outline: none;
+            font-size: 13px;
+        }
+        input[type="text"]:focus {
+            border-color: #38bdf8;
+        }
+        button {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pulse-ring"></div>
+        <h2>JARVIS</h2>
+        <div class="status" id="statusText">Dinleniyor ve komut bekleniyor...</div>
+        <div class="log-box" id="logBox">
+            <div class="log-item">> Sistem hazır...</div>
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="komutInput" placeholder="Komut yazın (örn: spotify aç)..." onkeydown="if(event.key==='Enter') komutGonder();">
+            <button onclick="komutGonder()">Gönder</button>
+        </div>
+    </div>
+
+    <script>
+        function arayuzuGuncelle(mesaj) {
+            const logBox = document.getElementById("logBox");
+            const statusText = document.getElementById("statusText");
+            
+            statusText.innerText = "İşleniyor...";
+            setTimeout(() => { statusText.innerText = "Dinleniyor..."; }, 2000);
+            
+            const item = document.createElement("div");
+            item.className = "log-item";
+            item.innerText = "> " + mesaj;
+            logBox.appendChild(item);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function komutGonder() {
+            const input = document.getElementById("komutInput");
+            const val = input.value.trim();
+            if (val) {
+                // Python tarafındaki komut işleme fonksiyonunu tetikler
+                window.pywebview.api.yazili_komut_isle(val);
+                input.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
