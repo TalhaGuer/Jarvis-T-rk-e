@@ -1,3 +1,5 @@
+                                                                  HALA ÜZERİNDE ÇALIŞILIYOR
+
 # Jarvis - Yerel Sesli ve Yazılı Masaüstü Asistanı
 
 Python ve Electron (Node.js) altyapısıyla geliştirilmiş; Vosk ses tanıma kütüphanesi ve Ollama (yerel LLM) desteğiyle tamamen çevrimdışı (lokal) olarak çalışan kişisel masaüstü asistan uygulamasıdır. İnternet bağımlılığı olmadan, verilerinizi dış sunuculara göndermeden bilgisayarınızı kontrol etmenizi ve yapay zeka ile sohbet etmenizi sağlar.
